@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VISHAL KARMA - Senior Ruby On Rails Developer</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load GSAP and ScrollTrigger for advanced animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <!-- Load Lucide Icons -->
+    <script type="module" src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Tailwind Configuration */
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'bg-dark': '#0a0a1a', /* Deep Cyber Navy */
+                        'bg-card': '#1a1a30',
+                        'accent-primary': '#00FFFF', /* Electric Cyan */
+                        'accent-secondary': '#FF00FF', /* Magenta */
+                        'border-electric': '#00FFFF30',
+                        'text-code': '#50FF50', /* Neon Green */
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    boxShadow: {
+                        'glow-cyan': '0 0 20px rgba(0, 255, 255, 0.4)',
+                        'glow-magenta': '0 0 15px rgba(255, 0, 255, 0.3)',
+                    }
+                }
+            }
+        }
+        
+        /* Custom CSS */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Fira+Code:wght=300..700&display=swap');
+
+        body {
+            background-color: #0a0a1a;
+            color: #f0f0f0;
+            overflow-x: hidden;
+            /* Subtle Animated Background Grid */
+            background-image: linear-gradient(0deg, transparent 24%, #00FFFF0d 25%, #00FFFF0d 26%, transparent 27%, transparent 74%, #00FFFF0d 75%, #00FFFF0d 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, #00FFFF0d 25%, #00FFFF0d 26%, transparent 27%, transparent 74%, #00FFFF0d 75%, #00FFFF0d 76%, transparent 77%, transparent);
+            background-size: 50px 50px;
+        }
+
+        /* --- Glitch Effect CSS (Used for Hero Name) --- */
+        #hero-name.glitched {
+            position: relative;
+            animation: glitch-flicker 1s steps(100) infinite alternate;
+        }
+        @keyframes glitch-flicker {
+            0% { text-shadow: 0.05em 0 0 #ff00ff, -0.05em -0.025em 0 #00ffff; }
+            15% { text-shadow: -0.05em -0.01em 0 #ff00ff, 0.025em 0.05em 0 #00ffff; }
+            50% { text-shadow: 0.02em 0 0 #ff00ff, -0.05em 0 0 #00ffff; }
+            100% { text-shadow: -0.025em 0.05em 0 #ff00ff, 0.05em -0.01em 0 #00ffff; }
+        }
+
+        /* --- Custom Timeline Styling --- */
+        .timeline {
+            position: relative;
+            padding-left: 3rem; 
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 1.5rem;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom, #FF00FF, #00FFFF, #0a0a1a);
+        }
+        .timeline-dot {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.35rem;
+            width: 14px;
+            height: 14px;
+            background-color: #00FFFF;
+            border-radius: 50%;
+            z-index: 10;
+            box-shadow: 0 0 10px #00FFFF;
+        }
+
+        /* --- Card and Link Styling (3D Tilt Ready) --- */
+        .styled-card {
+            transition: all 0.3s ease-in-out;
+            border: 1px solid #1a1a30;
+            transform-style: preserve-3d; /* Needed for 3D effect */
+            background: linear-gradient(145deg, #1a1a30, #202040); /* Gradient for depth */
+        }
+        .styled-card:hover {
+            border-color: #FF00FF;
+            box-shadow: 0 5px 30px rgba(255, 0, 255, 0.4);
+        }
+        .text-code {
+            font-family: 'Fira Code', monospace;
+            color: #50FF50;
+        }
+        .nav-link:hover {
+            color: #FF00FF;
+            text-shadow: 0 0 5px #FF00FF;
+        }
+    </style>
+</head>
+<body class="font-sans min-h-screen">
+    
+    <!-- NAVIGATION BAR -->
+    <nav class="sticky top-0 z-50 bg-bg-dark/95 backdrop-blur-sm shadow-lg border-b border-border-electric">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="#hero" class="text-3xl font-extrabold text-accent-primary hover:text-accent-secondary transition duration-300 font-mono tracking-widest">VK /_</a>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#summary" class="nav-link text-gray-300 transition duration-300">Summary</a>
+                    <a href="#experience" class="nav-link text-gray-300 transition duration-300">Experience</a>
+                    <a href="#skills" class="nav-link text-gray-300 transition duration-300">Skills</a>
+                    <a href="#projects" class="nav-link text-gray-300 transition duration-300">Projects</a>
+                    <a href="#education" class="nav-link text-gray-300 transition duration-300">Education</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-300 hover:text-accent-primary">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden fixed inset-0 z-40 bg-bg-dark/95 backdrop-blur-md p-6 md:hidden">
+        <div class="flex justify-end">
+            <button id="close-menu-button" class="text-gray-300 hover:text-accent-primary">
+                <i data-lucide="x" class="w-8 h-8"></i>
+            </button>
+        </div>
+        <div class="flex flex-col space-y-6 pt-10 text-center text-xl">
+            <a href="#summary" class="nav-link text-gray-300 hover:text-accent-primary" onclick="hideMenu()">Summary</a>
+            <a href="#experience" class="nav-link text-gray-300 hover:text-accent-primary" onclick="hideMenu()">Experience</a>
+            <a href="#skills" class="nav-link text-gray-300 hover:text-accent-primary" onclick="hideMenu()">Skills</a>
+            <a href="#projects" class="nav-link text-gray-300 hover:text-accent-primary" onclick="hideMenu()">Projects</a>
+            <a href="#education" class="nav-link text-gray-300 hover:text-accent-primary" onclick="hideMenu()">Education</a>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <main class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+        
+        <!-- HEADER / HERO SECTION -->
+        <!-- Note: Hero opacity-0 is intentional for the main entrance animation -->
+        <section id="hero" class="h-screen flex flex-col justify-center items-center text-center pt-16">
+            <div class="space-y-8">
+                <!-- Title with Animation -->
+                <p id="hero-title" class="text-xl sm:text-2xl font-mono text-accent-secondary opacity-0">
+                    // Accessing Profile: Initiated
+                </p>
+                
+                <!-- Name with Glitch Effect -->
+                <h1 id="hero-name" class="text-7xl sm:text-8xl lg:text-9xl font-extrabold tracking-tight text-white opacity-0 transition-colors duration-500">
+                    VISHAL KARMA
+                </h1>
+                
+                <!-- Subtitle with Typing/Glow Animation -->
+                <p id="hero-subtitle" class="text-3xl sm:text-4xl lg:text-5xl font-mono text-accent-primary opacity-0">
+                    &lt;Senior Ruby On Rails Developer&gt;
+                </p>
+
+                <!-- CTA Button -->
+                <div id="hero-cta" class="pt-10 opacity-0">
+                    <a href="mailto:vishalkarma0427@gmail.com" class="px-10 py-4 bg-accent-primary text-bg-dark font-bold rounded-full text-xl shadow-glow-cyan hover:bg-Gray transition-all duration-300 transform hover:scale-105 inline-flex items-center space-x-3 border-2 border-accent-primary">
+                        <i data-lucide="mail" class="w-6 h-6"></i>
+                        <span>Want To Connect Via Email</span>
+                    </a>
+                </div>
+                
+                <!-- Contact Info as Footer in Hero -->
+                <div id="contact-info" class="flex flex-wrap justify-center gap-6 sm:gap-10 pt-16 text-sm sm:text-base text-gray-400 opacity-0">
+                    <span class="flex items-center space-x-2">
+                        <i data-lucide="map-pin" class="w-4 h-4 text-accent-secondary"></i>
+                        <span>Indore, India</span>
+                    </span>
+                    <span class="flex items-center space-x-2">
+                        <i data-lucide="phone" class="w-4 h-4 text-accent-secondary"></i>
+                        <span>+91 6264037698</span>
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SUMMARY SECTION -->
+        <section id="summary" class="py-32 scroll-reveal">
+            <h2 class="section-header text-4xl font-extrabold mb-12 text-white border-b-2 border-accent-primary/50 pb-2 inline-flex items-center space-x-4">
+                <span class="text-accent-secondary text-3xl font-mono">// 01.</span>
+                <span>Professional Summary</span>
+            </h2>
+            <!-- REMOVED transform scale-90 opacity-0 -->
+            <div class="bg-bg-card p-8 rounded-xl styled-card scroll-reveal-item">
+                <p class="text-lg leading-relaxed text-gray-300">
+                    Results-driven professional with a proven track record of success across diverse industries. Adept at leveraging strong analytical, problem-solving, and communication skills to deliver high-quality outcomes. Committed to continuous professional development, achieving organizational objectives, and contributing effectively to collaborative team environments.
+                </p>
+            </div>
+        </section>
+
+        <!-- EXPERIENCE SECTION - USING TIMELINE -->
+        <section id="experience" class="py-32 scroll-reveal">
+            <h2 class="section-header text-4xl font-extrabold mb-12 text-white border-b-2 border-accent-primary/50 pb-2 inline-flex items-center space-x-4">
+                <span class="text-accent-secondary text-3xl font-mono">// 02.</span>
+                <span>Career</span>
+            </h2>
+            
+            <div class="timeline">
+                <!-- Job Card (Only one provided in PDF) -->
+                <!-- REMOVED transform translate-x-10 opacity-0 -->
+                <div class="timeline-item pb-16 scroll-reveal-item">
+                    <div class="timeline-dot"></div>
+                    <div class="bg-bg-card p-6 rounded-xl styled-card ml-8">
+                        <div class="flex flex-col sm:flex-row justify-between items-start mb-3">
+                            <h3 class="text-2xl font-bold text-accent-primary leading-tight">Software Developer (Ruby On Rails Developer)</h3>
+                            <span class="text-sm text-code mt-1 sm:mt-0 flex-shrink-0">12/2022 &gt; Present</span>
+                        </div>
+                        <p class="text-lg font-semibold text-accent-secondary mb-4">Golden Eagle It Technologies pvt. ltd. | Indore, India</p>
+                        
+                        <ul class="list-none space-y-3 mt-4">
+                            <!-- Refined Experience Points based on the PDF -->
+                            <li class="flex items-start text-gray-400">
+                                <i data-lucide="chevron-right" class="w-5 h-5 flex-shrink-0 text-accent-secondary mt-1 mr-2"></i>
+                                <span>Dedicated professional with **3+ years** experience delivering robust web apps on **Ruby on Rails** and **Salesforce**. Proven expertise in API design, architecture, and database management.</span>
+                            </li>
+                            <li class="flex items-start text-gray-400">
+                                <i data-lucide="chevron-right" class="w-5 h-5 flex-shrink-0 text-accent-secondary mt-1 mr-2"></i>
+                                <span>Designed and developed scalable features within a robust framework, ensuring optimal performance and consistently surpassing client expectations.</span>
+                            </li>
+                            <li class="flex items-start text-gray-400">
+                                <i data-lucide="chevron-right" class="w-5 h-5 flex-shrink-0 text-accent-secondary mt-1 mr-2"></i>
+                                <span>Developed, maintained, and managed **RESTful APIs** and integrated various data sources and databases to create a cohesive and efficient system.</span>
+                            </li>
+                            <li class="flex items-start text-gray-400">
+                                <i data-lucide="chevron-right" class="w-5 h-5 flex-shrink-0 text-accent-secondary mt-1 mr-2"></i>
+                                <span>Conducted thorough **unit testing** and comprehensive bug fixing, enhancing overall system reliability and proposing effective solutions for identified issues.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SKILLS / TECH STACK SECTION -->
+        <section id="skills" class="py-32 scroll-reveal">
+            <h2 class="section-header text-4xl font-extrabold mb-12 text-white border-b-2 border-accent-primary/50 pb-2 inline-flex items-center space-x-4">
+                <span class="text-accent-secondary text-3xl font-mono">// 03.</span>
+                <span>Tech Stack & Skill_Set</span>
+            </h2>
+            
+            <div id="skills-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-4">
+                <!-- Skill Logos will be injected here by JS -->
+            </div>
+        </section>
+
+        <!-- PROJECTS SECTION - USING GRID AND 3D TILT EFFECT -->
+        <section id="projects" class="py-32 scroll-reveal">
+            <h2 class="section-header text-4xl font-extrabold mb-12 text-white border-b-2 border-accent-primary/50 pb-2 inline-flex items-center space-x-4">
+                <span class="text-accent-secondary text-3xl font-mono">// 04.</span>
+                <span>Key Project Experience</span>
+            </h2>
+            
+            <div id="projects-container" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Project 1: Procore -->
+                <!-- REMOVED transform scale-90 opacity-0 -->
+                <div class="project-card styled-card bg-bg-card p-6 rounded-xl shadow-xl scroll-reveal-item">
+                    <h3 class="text-2xl font-bold text-accent-primary mb-2">Procore: Construction Management Software</h3>
+                    <p class="text-gray-400 mb-4 text-sm">Contributed to Procore’s cloud-based construction management solutions by developing key features across authentication, MFA, and deployment validation. Collaborated with cross-functional teams using Jira and Confluence, working with diverse technologies.</p>
+                    <p class="text-code text-xs font-semibold mt-4 border-t border-border-electric pt-3">Stack: **Ruby on Rails**, React.js, TypeScript, AWS, Terraform, Databricks, Jira</p>
+                </div>
+
+                <!-- Project 2: FLUENTPET -->
+                <!-- REMOVED transform scale-90 opacity-0 -->
+                <div class="project-card styled-card bg-bg-card p-6 rounded-xl shadow-xl scroll-reveal-item">
+                    <h3 class="text-2xl font-bold text-accent-primary mb-2">FLUENTPET: Pet Communication System</h3>
+                    <p class="text-gray-400 mb-4 text-sm">Contributed to the development of FluentPet, an innovative communication system for pets, by building and integrating recordable sound button technology using core web technologies and Ruby on Rails.</p>
+                    <p class="text-code text-xs font-semibold mt-4 border-t border-border-electric pt-3">Stack: **Ruby on Rails**, HTML, CSS, JavaScript, MySQL</p>
+                </div>
+
+                <!-- Project 3: IN IT TOGETHER -->
+                <!-- REMOVED transform scale-90 opacity-0 -->
+                <div class="project-card styled-card bg-bg-card p-6 rounded-xl shadow-xl scroll-reveal-item">
+                    <h3 class="text-2xl font-bold text-accent-primary mb-2">IN IT TOGETHER: Festival's Community App</h3>
+                    <p class="text-gray-400 mb-4 text-sm">Developed an event management app with features like scheduling, ticket booking, and location tracking. Utilized Ruby, JavaScript, PostgreSQL, and **RESTful APIs** to build reliable, user-friendly interfaces. Ensured quality through unit testing, bug fixing, and collaborative tools like Jira, Slack, GitHub, and Confluence.</p>
+                    <p class="text-code text-xs font-semibold mt-4 border-t border-border-electric pt-3">Stack: **Ruby**, JavaScript, PostgreSQL, RESTful APIs, Jira, GitHub</p>
+                </div>
+
+                <!-- Project 4: Child and Family eHub -->
+                <!-- REMOVED transform scale-90 opacity-0 -->
+                <div class="project-card styled-card bg-bg-card p-6 rounded-xl shadow-xl scroll-reveal-item">
+                    <h3 class="text-2xl font-bold text-accent-primary mb-2">Child and Family eHub</h3>
+                    <p class="text-gray-400 mb-4 text-sm">Designed and maintained core features using **Ruby on Rails**, PostgreSQL, and RESTful APIs, while mentoring junior developers and ensuring high-quality, user-friendly interfaces as a senior developer.</p>
+                    <p class="text-code text-xs font-semibold mt-4 border-t border-border-electric pt-3">Stack: **Ruby on Rails**, PostgreSQL, RESTful APIs</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- EDUCATION & LANGUAGES -->
+        <section id="education" class="py-32 scroll-reveal">
+             <h2 class="section-header text-4xl font-extrabold mb-12 text-white border-b-2 border-accent-primary/50 pb-2 inline-flex items-center space-x-4">
+                <span class="text-accent-secondary text-3xl font-mono">// 05.</span>
+                <span>Education & Localization</span>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Education Column -->
+                <!-- REMOVED transform translate-y-10 opacity-0 -->
+                <div class="scroll-reveal-item">
+                    <h3 class="text-2xl font-semibold mb-4 text-accent-primary">Education</h3>
+                    <div class="bg-bg-card p-6 rounded-xl styled-card">
+                        <p class="text-xl font-bold text-white">Bachelor of Information Technology</p>
+                        <p class="text-lg text-accent-secondary mb-1">Jawaharlal Institute of Technology, Borawan</p>
+                        <span class="text-sm text-code">07/2019 &gt; 07/2023</span>
+                    </div>
+                </div>
+
+                <!-- Languages Column -->
+                <!-- REMOVED transform translate-y-10 opacity-0 -->
+                <div class="scroll-reveal-item">
+                    <h3 class="text-2xl font-semibold mb-4 text-accent-primary">Languages</h3>
+                    <div class="bg-bg-card p-6 rounded-xl styled-card space-y-3">
+                        <div class="flex justify-between items-center text-lg text-gray-300">
+                            <span>Hindi</span>
+                            <span class="text-code">Status: Proficient</span>
+                        </div>
+                        <div class="flex justify-between items-center text-lg text-gray-300">
+                            <span>English</span>
+                            <span class="text-code">Status: Proficient</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-bg-card border-t border-border-electric mt-16 py-8 text-center text-gray-500 text-sm font-mono">
+        <div class="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-8 max-w-xl mx-auto">
+            <!-- Contact details are already in the Hero/Footer section, maintaining clean code -->
+        </div>
+        <p class="mt-4 text-accent-secondary">VISHAL KARMA /&gt; End of Transmission // Designed for Impact</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- 1. DATA SETUP ---
+            const skillsData = [
+                "Ruby on Rails", "Ruby", "Salesforce", "JavaScript", "React.js", "TypeScript", 
+                "Rspec", "Minitest", "PostgreSQL", "MySQL", "RESTful APIs", "AWS", 
+                "Docker", "Terraform", "Git", "CI/CD", "Hotwire/Turbo", "Microservices",
+                "HTML/CSS", "Bootstrap", "Grafana", "Databricks"
+            ];
+
+            const skillsGrid = document.getElementById('skills-grid');
+
+            function getIconForSkill(skill) {
+                const map = {
+                    'Ruby on Rails': 'shield-half', 'Ruby': 'gem',
+                    'JavaScript': 'code', 'React.js': 'atom',
+                    'Rspec': 'test-tube', 'Minitest': 'flask-conical', 'PostgreSQL': 'database',
+                    'MySQL': 'database', 'RESTful APIs': 'webhook', 'AWS': 'cloud', 
+                    'Docker': 'package', 'Terraform': 'blocks-3', 'Git': 'git-branch', 
+                    'CI/CD': 'zap', 'Hotwire/Turbo': 'gauge', 'Microservices': 'cpu',
+                    'HTML/CSS': 'code-2', 'Bootstrap': 'layout-grid', 'Grafana': 'bar-chart',
+                    'Databricks': 'sigma',
+                };
+                const key = Object.keys(map).find(k => skill.toLowerCase().includes(k.toLowerCase()));
+                return map[key] || 'terminal'; 
+            }
+
+            // Inject Skills Data into the Grid
+            skillsData.forEach((skill, index) => {
+                const skillElement = document.createElement('div');
+                // REMOVED initial hiding classes from generated element
+                skillElement.className = 'flex flex-col items-center justify-center p-4 bg-bg-card rounded-xl text-center text-xs font-semibold text-gray-300 border border-border-electric transition duration-300 hover:text-accent-primary hover:shadow-glow-cyan cursor-default scroll-reveal-item';
+                skillElement.innerHTML = `
+                    <i data-lucide="${getIconForSkill(skill)}" class="w-6 h-6 mb-2 text-accent-secondary"></i>
+                    <span class="font-mono text-code">${skill}</span>
+                `;
+                skillsGrid.appendChild(skillElement);
+            });
+
+            lucide.createIcons();
+            
+            // --- 2. GSAP ANIMATIONS & SCROLL REVEAL ---
+            gsap.registerPlugin(ScrollTrigger);
+
+            // 1. Hero Entrance Animation with Glitch
+            const heroName = document.getElementById('hero-name');
+            const tlHero = gsap.timeline();
+
+            tlHero.to("#hero-title", { opacity: 1, duration: 0.5, ease: "power2.out" })
+                .to(heroName, { opacity: 1, duration: 0.1, ease: "none", onComplete: () => heroName.classList.add('glitched') })
+                .to(heroName, { 
+                    duration: 1.5, 
+                    ease: "none", 
+                    onComplete: () => heroName.classList.remove('glitched') 
+                }) // Let the glitch run
+                .to("#hero-subtitle", { opacity: 1, duration: 0.8, ease: "power2.out", color: '#00FFFF' }, "-=0.8")
+                .to("#hero-cta", { opacity: 1, duration: 0.6, ease: "power2.out" }, "-=0.4")
+                .to("#contact-info", { opacity: 1, duration: 0.6, ease: "power2.out" }, "-=0.2");
+
+            // 2. Scroll Reveal for all Sections/Items (using a scale/fade up for visual punch)
+            document.querySelectorAll('.scroll-reveal-item').forEach(element => {
+                let initialY = 30;
+                let initialX = 0;
+                let initialScale = 0.9;
+
+                // Adjust initial position for timeline items
+                if (element.closest('.timeline')) {
+                    initialX = 40; // Slide in from the left slightly
+                    initialY = 0;
+                    initialScale = 1;
+                }
+                
+                gsap.from(element, {
+                    scale: initialScale,
+                    opacity: 0,
+                    x: initialX,
+                    y: initialY,
+                    duration: 1.0,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: element,
+                        start: "top 85%",
+                        toggleActions: "play none none none",
+                    }
+                });
+            });
+
+            // 3. 3D Tilt Effect on Project Cards
+            const projectCards = document.querySelectorAll('.project-card');
+
+            projectCards.forEach(card => {
+                let cardHoverTL = gsap.timeline({ paused: true });
+
+                cardHoverTL.to(card, {
+                    scale: 1.05,
+                    boxShadow: "0 10px 40px rgba(0, 255, 255, 0.4)",
+                    duration: 0.3
+                });
+
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = (e.clientX - rect.left) / rect.width; // 0 to 1
+                    const y = (e.clientY - rect.top) / rect.height; // 0 to 1
+
+                    // Map x/y (0-1) to rotation values (-10deg to +10deg)
+                    const rotY = (x - 0.5) * 20; 
+                    const rotX = (y - 0.5) * -20; 
+
+                    gsap.to(card, {
+                        rotationY: rotY,
+                        rotationX: rotX,
+                        ease: "power1.out",
+                        duration: 0.5
+                    });
+                });
+
+                card.addEventListener('mouseenter', () => cardHoverTL.play());
+                card.addEventListener('mouseleave', () => {
+                    cardHoverTL.reverse();
+                    gsap.to(card, {
+                        rotationY: 0,
+                        rotationX: 0,
+                        duration: 0.5,
+                        ease: "elastic.out(1, 0.5)"
+                    });
+                });
+            });
+
+
+            // 4. Mobile Menu Toggle
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileButton = document.getElementById('mobile-menu-button');
+            const closeButton = document.getElementById('close-menu-button');
+
+            mobileButton.addEventListener('click', () => {
+                mobileMenu.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; 
+            });
+
+            closeButton.addEventListener('click', () => {
+                hideMenu();
+            });
+            
+            window.hideMenu = function() {
+                mobileMenu.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
+</body>
+</html>
+
